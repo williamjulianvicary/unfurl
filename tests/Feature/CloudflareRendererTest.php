@@ -26,8 +26,8 @@ test('sends url-based screenshot request to cloudflare', function (): void {
 
         return str_contains((string) $request->url(), 'test-account/browser-rendering/screenshot')
             && $body['url'] === 'https://example.com'
-            && $body['type'] === '.jpeg'
-            && $body['deviceScaleFactor'] === 2
+            && $body['screenshotOptions']['type'] === 'jpeg'
+            && $body['viewport']['deviceScaleFactor'] === 2
             && $body['viewport']['width'] === 1200
             && $body['viewport']['height'] === 630;
     });
