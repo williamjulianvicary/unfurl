@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\RateLimited;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Support\Facades\Storage;
 use WilliamJulianVicary\Unfurl\Models\OgImage;
 use WilliamJulianVicary\Unfurl\OgImageManager;
@@ -40,6 +42,22 @@ final class GenerateOgImage implements ShouldBeUnique, ShouldQueue
                 $this->onQueue($queueConfig['name']);
             }
         }
+    }
+
+    /** @return list<object> */
+    public function middleware(): array
+    {
+        $middleware = [];
+
+        if (config('unfurl.queue.without_overlapping', true)) {
+            $middleware[] = new WithoutOverlapping($this->uniqueId());
+        }
+
+        if (config('unfurl.queue.rate_limit')) {
+            $middleware[] = new RateLimited('unfurl');
+        }
+
+        return $middleware;
     }
 
     public function uniqueId(): string

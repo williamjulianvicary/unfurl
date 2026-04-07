@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Queue\Middleware\RateLimited;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use WilliamJulianVicary\Unfurl\Jobs\GenerateOgImage;
@@ -109,3 +111,44 @@ test('sends url to cloudflare', function (): void {
 
     Http::assertSent(fn ($request): bool => $request->data()['url'] === 'https://example.com/my-page');
 });
+
+test('middleware includes WithoutOverlapping by default', function (): void {
+    $job = new GenerateOgImage(key: 'homepage', url: 'https://example.com');
+
+    $middleware = $job->middleware();
+
+    expect(middlewareContains($middleware, WithoutOverlapping::class))->toBeTrue();
+});
+
+test('middleware excludes WithoutOverlapping when disabled', function (): void {
+    config()->set('unfurl.queue.without_overlapping', false);
+
+    $job = new GenerateOgImage(key: 'homepage', url: 'https://example.com');
+
+    $middleware = $job->middleware();
+
+    expect(middlewareContains($middleware, WithoutOverlapping::class))->toBeFalse();
+});
+
+test('middleware includes RateLimited by default', function (): void {
+    $job = new GenerateOgImage(key: 'homepage', url: 'https://example.com');
+
+    $middleware = $job->middleware();
+
+    expect(middlewareContains($middleware, RateLimited::class))->toBeTrue();
+});
+
+test('middleware excludes RateLimited when disabled', function (): void {
+    config()->set('unfurl.queue.rate_limit', null);
+
+    $job = new GenerateOgImage(key: 'homepage', url: 'https://example.com');
+
+    $middleware = $job->middleware();
+
+    expect(middlewareContains($middleware, RateLimited::class))->toBeFalse();
+});
+
+function middlewareContains(array $middleware, string $class): bool
+{
+    return count(array_filter($middleware, fn ($m): bool => $m instanceof $class)) > 0;
+}

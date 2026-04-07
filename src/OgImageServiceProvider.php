@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WilliamJulianVicary\Unfurl;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use WilliamJulianVicary\Unfurl\Contracts\Renderer;
@@ -27,6 +29,8 @@ final class OgImageServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'unfurl');
 
+        $this->configureRateLimiting();
+
         if (config('unfurl.route.enabled', false)) {
             $this->registerRoutes();
         }
@@ -43,6 +47,15 @@ final class OgImageServiceProvider extends ServiceProvider
             $this->publishesMigrations([
                 __DIR__.'/../database/migrations' => database_path('migrations'),
             ], 'unfurl-migrations');
+        }
+    }
+
+    private function configureRateLimiting(): void
+    {
+        $limit = config('unfurl.queue.rate_limit');
+
+        if (is_int($limit) && $limit > 0) {
+            RateLimiter::for('unfurl', fn (): Limit => Limit::perMinute($limit));
         }
     }
 

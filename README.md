@@ -256,6 +256,8 @@ After publishing the config file (`config/unfurl.php`), the following options ar
 | `queue.enabled` | `true` | | Dispatch generation jobs via the queue |
 | `queue.connection` | `null` | `UNFURL_QUEUE_CONNECTION` | Queue connection name, leave blank for Laravel default |
 | `queue.name` | `null` | `UNFURL_QUEUE` | Queue name, leave blank for Laravel default |
+| `queue.without_overlapping` | `true` | | Apply `WithoutOverlapping` middleware to prevent concurrent jobs for the same key/variant |
+| `queue.rate_limit` | `6` | | Maximum jobs per minute. Set to `null` or `false` to disable rate limiting |
 | `generate_on_access` | `true` | | Auto-dispatch generation when `url()` is called with no existing image |
 | `refresh_after_days` | `30` | | Regenerate images older than this many days. Set to `null` to disable. Affects `url()` calls.|
 | `format` | `'jpeg'` | | Output format: `"jpeg"` or `"png"` |

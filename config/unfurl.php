@@ -95,6 +95,8 @@ return [
         'enabled' => true,
         'connection' => env('UNFURL_QUEUE_CONNECTION'),
         'name' => env('UNFURL_QUEUE'),
+        'without_overlapping' => true,
+        'rate_limit' => 6,
     ],
 
     /*
