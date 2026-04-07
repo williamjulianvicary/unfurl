@@ -50,7 +50,7 @@ final class GenerateOgImage implements ShouldBeUnique, ShouldQueue
         $middleware = [];
 
         if (config('unfurl.queue.without_overlapping', true)) {
-            $middleware[] = new WithoutOverlapping($this->uniqueId());
+            $middleware[] = new WithoutOverlapping;
         }
 
         if (config('unfurl.queue.rate_limit')) {
