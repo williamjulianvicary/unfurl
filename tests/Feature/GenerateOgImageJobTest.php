@@ -139,7 +139,7 @@ test('middleware includes RateLimited by default', function (): void {
 });
 
 test('middleware excludes RateLimited when disabled', function (): void {
-    config()->set('unfurl.queue.rate_limit', null);
+    config()->set('unfurl.queue.rate_limit');
 
     $job = new GenerateOgImage(key: 'homepage', url: 'https://example.com');
 
@@ -150,5 +150,5 @@ test('middleware excludes RateLimited when disabled', function (): void {
 
 function middlewareContains(array $middleware, string $class): bool
 {
-    return count(array_filter($middleware, fn ($m): bool => $m instanceof $class)) > 0;
+    return array_filter($middleware, fn ($m): bool => $m instanceof $class) !== [];
 }
