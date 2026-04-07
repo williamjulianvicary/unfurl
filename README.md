@@ -13,6 +13,17 @@ Unfurl takes a different approach:
 - **Queue-first generation** - images are rendered in the background via Laravel's queue so page loads are never blocked.
 - **Built-in templates** - includes ready-to-use Blade templates (`basic`, `dark`, `minimal`) with automatic text fitting - customise the templates or bring your own.
 
+<table>
+  <tr>
+    <td><img src="docs/examples/basic.png" alt="Basic template" width="400"></td>
+    <td><img src="docs/examples/dark.png" alt="Dark template" width="400"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/examples/minimal.png" alt="Minimal template" width="400"></td>
+    <td><img src="docs/examples/url.png" alt="URL screenshot" width="400"></td>
+  </tr>
+</table>
+
 > **Requires [PHP 8.2+](https://php.net/releases/)** and **[Laravel 11+](https://laravel.com)** and either **CloudFlare Browser Rendering (free tier available) or Browsershot** with local Chrome available.
 
 - [Installation](#installation)
